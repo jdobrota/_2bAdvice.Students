@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 using _2bAdvice.Students.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using _2bAdvice.Students.EntityFrameworkCore;
 namespace _2bAdvice.Students.Migrations
 {
     [DbContext(typeof(StudentsDbContext))]
-    partial class StudentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240507092051_Student_Key_Override2")]
+    partial class Student_Key_Override2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

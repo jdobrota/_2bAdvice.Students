@@ -29,6 +29,9 @@ using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Autofac.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.OData;
 
 namespace _2bAdvice.Students;
 
@@ -70,6 +73,12 @@ public class StudentsHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
+        ConfigureOData(context);
+    }
+
+    private void ConfigureOData(ServiceConfigurationContext context)
+    {
+        context.Services.AddControllers().AddOData(opt => opt.Select().Filter().Count().OrderBy());
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
