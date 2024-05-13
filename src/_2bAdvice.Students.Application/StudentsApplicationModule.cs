@@ -1,4 +1,6 @@
-﻿using Volo.Abp.Account;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -18,14 +20,16 @@ namespace _2bAdvice.Students;
     typeof(AbpTenantManagementApplicationModule),
     typeof(AbpFeatureManagementApplicationModule),
     typeof(AbpSettingManagementApplicationModule)
-    )]
+)]
+[DependsOn(typeof(AbpAutoMapperModule))]
 public class StudentsApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<StudentsApplicationModule>();
-        });
+        context.Services.AddAutoMapperObjectMapper<StudentsApplicationModule>();
+
+        this.Configure<AbpAutoMapperOptions>(options =>
+            options.AddMaps<StudentsApplicationModule>(validate: true)
+        );
     }
 }

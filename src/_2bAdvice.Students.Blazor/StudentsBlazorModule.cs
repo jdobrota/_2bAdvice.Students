@@ -2,23 +2,26 @@
 using System.Net.Http;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using _2bAdvice.Students.Blazor.Menus;
 using OpenIddict.Abstractions;
-using Volo.Abp.AspNetCore.Components.WebAssembly.LeptonXLiteTheme;
 using Volo.Abp.AspNetCore.Components.Web.LeptonXLiteTheme.Themes.LeptonXLite;
 using Volo.Abp.AspNetCore.Components.Web.Theming.Routing;
+using Volo.Abp.AspNetCore.Components.WebAssembly.LeptonXLiteTheme;
 using Volo.Abp.Autofac.WebAssembly;
 using Volo.Abp.AutoMapper;
-using Volo.Abp.Modularity;
-using Volo.Abp.UI.Navigation;
 using Volo.Abp.Identity.Blazor.WebAssembly;
+using Volo.Abp.Modularity;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.SettingManagement.Blazor.WebAssembly;
 using Volo.Abp.TenantManagement.Blazor.WebAssembly;
+using Volo.Abp.UI.Navigation;
+using _2bAdvice.Students.Blazor.Menus;
+using _2bAdvice.Students.Blazor.Services.Base;
+using _2bAdvice.Students.Blazor.Services.Student;
 
 namespace _2bAdvice.Students.Blazor;
 
@@ -39,34 +42,44 @@ public class StudentsBlazorModule : AbpModule
 
         ConfigureAuthentication(builder);
         ConfigureHttpClient(context, environment);
-        ConfigureBlazorise(context);
-        ConfigureRouter(context);
+        this.ConfigureBlazorise(context);
+        this.ConfigureRouter(context);
         ConfigureUI(builder);
-        ConfigureMenu(context);
-        ConfigureAutoMapper(context);
+        this.ConfigureMenu(context);
+        this.ConfigureAutoMapper(context);
+
+        context.Services.AddFluxor(config =>
+            config.ScanAssemblies(typeof(StudentsBlazorModule).Assembly).UseReduxDevTools()
+        );
+
+        context.Services.AddScoped(sp => new HttpClient
+        {
+            BaseAddress = new Uri("https://localhost:44318")
+        });
+
+        context.Services.AddScoped<IClient, Client>();
+        context.Services.AddScoped<IStudentService, StudentService>();
     }
 
     private void ConfigureRouter(ServiceConfigurationContext context)
     {
-        Configure<AbpRouterOptions>(options =>
-        {
-            options.AppAssembly = typeof(StudentsBlazorModule).Assembly;
-        });
+        this.Configure<AbpRouterOptions>(options =>
+            options.AppAssembly = typeof(StudentsBlazorModule).Assembly
+        );
     }
 
     private void ConfigureMenu(ServiceConfigurationContext context)
     {
-        Configure<AbpNavigationOptions>(options =>
-        {
-            options.MenuContributors.Add(new StudentsMenuContributor(context.Services.GetConfiguration()));
-        });
+        this.Configure<AbpNavigationOptions>(options =>
+            options.MenuContributors.Add(
+                new StudentsMenuContributor(context.Services.GetConfiguration())
+            )
+        );
     }
 
     private void ConfigureBlazorise(ServiceConfigurationContext context)
     {
-        context.Services
-            .AddBootstrap5Providers()
-            .AddFontAwesomeIcons();
+        context.Services.AddBootstrap5Providers().AddFontAwesomeIcons();
     }
 
     private static void ConfigureAuthentication(WebAssemblyHostBuilder builder)
@@ -90,7 +103,10 @@ public class StudentsBlazorModule : AbpModule
         builder.RootComponents.Add<HeadOutlet>("head::after");
     }
 
-    private static void ConfigureHttpClient(ServiceConfigurationContext context, IWebAssemblyHostEnvironment environment)
+    private static void ConfigureHttpClient(
+        ServiceConfigurationContext context,
+        IWebAssemblyHostEnvironment environment
+    )
     {
         context.Services.AddTransient(sp => new HttpClient
         {
@@ -100,9 +116,6 @@ public class StudentsBlazorModule : AbpModule
 
     private void ConfigureAutoMapper(ServiceConfigurationContext context)
     {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<StudentsBlazorModule>();
-        });
+        this.Configure<AbpAutoMapperOptions>(options => options.AddMaps<StudentsBlazorModule>());
     }
 }

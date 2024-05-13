@@ -2,23 +2,22 @@
 using System.ComponentModel.DataAnnotations;
 using _2bAdvice.Students.Shared;
 
-namespace _2bAdvice.Students.Students
+namespace _2bAdvice.Students.Students;
+
+public class CreateUpdateStudentDto
 {
-    public class CreateUpdateStudentDto
-    {
-        [Required]
-        [StringLength(50)]
-        public string FirstName { get; set; } = String.Empty;
+    [Required]
+    [StringLength(50)]
+    public string FirstName { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(50)]
-        public string LastName { get; set; } = String.Empty;
+    [Required]
+    [StringLength(50)]
+    public string LastName { get; set; } = string.Empty;
 
-        [Required]
-        public StudyTypeEnum TypeOfStudy { get; set; } = StudyTypeEnum.INTERNAL;
+    [Required]
+    public StudyTypeEnum TypeOfStudy { get; set; } = StudyTypeEnum.INTERNAL;
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
-    }
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime DateOfBirth { get; set; }
 }

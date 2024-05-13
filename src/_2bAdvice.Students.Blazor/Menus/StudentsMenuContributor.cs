@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using _2bAdvice.Students.Localization;
-using _2bAdvice.Students.MultiTenancy;
 using Volo.Abp.Account.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Identity.Blazor;
@@ -11,6 +9,8 @@ using Volo.Abp.SettingManagement.Blazor.Menus;
 using Volo.Abp.TenantManagement.Blazor.Navigation;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.Users;
+using _2bAdvice.Students.Localization;
+using _2bAdvice.Students.MultiTenancy;
 
 namespace _2bAdvice.Students.Blazor.Menus;
 
@@ -20,18 +20,18 @@ public class StudentsMenuContributor : IMenuContributor
 
     public StudentsMenuContributor(IConfiguration configuration)
     {
-        _configuration = configuration;
+        this._configuration = configuration;
     }
 
     public async Task ConfigureMenuAsync(MenuConfigurationContext context)
     {
         if (context.Menu.Name == StandardMenus.Main)
         {
-            await ConfigureMainMenuAsync(context);
+            await this.ConfigureMainMenuAsync(context);
         }
         else if (context.Menu.Name == StandardMenus.User)
         {
-            await ConfigureUserMenuAsync(context);
+            await this.ConfigureUserMenuAsync(context);
         }
     }
 
@@ -41,14 +41,9 @@ public class StudentsMenuContributor : IMenuContributor
 
         context.Menu.Items.Insert(
             0,
-            new ApplicationMenuItem(
-                StudentsMenus.Home,
-                l["Menu:Home"],
-                "/",
-                icon: "fas fa-home"
-            )
+            new ApplicationMenuItem(StudentsMenus.Home, l["Menu:Home"], "/", icon: "fas fa-home")
         );
-     
+
         var administration = context.Menu.GetAdministration();
 
         if (MultiTenancyConsts.IsEnabled)
@@ -70,15 +65,18 @@ public class StudentsMenuContributor : IMenuContributor
     {
         var accountStringLocalizer = context.GetLocalizer<AccountResource>();
 
-        var authServerUrl = _configuration["AuthServer:Authority"] ?? "";
+        var authServerUrl = this._configuration["AuthServer:Authority"] ?? "";
 
-        context.Menu.AddItem(new ApplicationMenuItem(
-            "Account.Manage",
-            accountStringLocalizer["MyAccount"],
-            $"{authServerUrl.EnsureEndsWith('/')}Account/Manage?returnUrl={_configuration["App:SelfUrl"]}",
-            icon: "fa fa-cog",
-            order: 1000,
-            null).RequireAuthenticated());
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                "Account.Manage",
+                accountStringLocalizer["MyAccount"],
+                $"{authServerUrl.EnsureEndsWith('/')}Account/Manage?returnUrl={this._configuration["App:SelfUrl"]}",
+                icon: "fa fa-cog",
+                order: 1000,
+                null
+            ).RequireAuthenticated()
+        );
 
         return Task.CompletedTask;
     }

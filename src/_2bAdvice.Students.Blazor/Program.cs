@@ -5,14 +5,13 @@ namespace _2bAdvice.Students.Blazor;
 
 public class Program
 {
-    public async static Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
         var application = await builder.AddApplicationAsync<StudentsBlazorModule>(options =>
-        {
-            options.UseAutofac();
-        });
+            options.UseAutofac()
+        );
 
         var host = builder.Build();
 

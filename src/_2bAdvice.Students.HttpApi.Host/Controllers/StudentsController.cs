@@ -1,44 +1,79 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using _2bAdvice.Students.Students;
-using Volo.Abp.Domain.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.Extensions.Logging;
+using _2bAdvice.Students.Students;
 
-namespace _2bAdvice.Students.Controllers
+namespace _2bAdvice.Students.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[AllowAnonymous]
+public class StudentsController : ODataController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [AllowAnonymous]
+    private readonly ILogger? _logger;
+    private readonly IStudentsAppService? _studentsAppService;
 
-    public class StudentsController : ODataController
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StudentsController" /> class.
+    /// </summary>
+    /// <param name="logger">
+    /// The logger.
+    /// </param>
+    /// <param name="studentsAppService">
+    /// The students application service.
+    /// </param>
+    public StudentsController(
+        ILogger<StudentsController> logger,
+        IStudentsAppService studentsAppService
+    )
     {
-        private readonly ILogger? _logger;
-        private readonly IRepository<Student, Guid>? _studentRepository;
+        this._logger = logger;
+        this._studentsAppService = studentsAppService;
+    }
 
-        public StudentsController(IRepository<Student, Guid>? studentRepository)
+    /// <summary>
+    /// Gets the students.
+    /// </summary>
+    /// <returns>
+    ///   <br />
+    /// </returns>
+    [HttpGet]
+    [EnableQuery]
+    public async Task<ActionResult<List<StudentDto>>> GetStudents()
+    {
+        try
         {
-            this._studentRepository = studentRepository;
+            var studentsDto = await this._studentsAppService!.GetStudentsDtoAsync();
+
+            return this.Ok(studentsDto);
         }
-
-        [HttpGet]
-        [EnableQuery]
-        public async Task<ActionResult<List<Student>>> GetStudents()
+        catch (Exception ex)
         {
-            try
-            {
-                var studentDtos = await this._studentRepository!.GetListAsync();
-                return Ok(studentDtos);
-            }
-            catch (Exception ex)
-            {
-                this._logger!.Error(ex, $"Error performing GET in {nameof(GetStudents)}");
-                return StatusCode(500, ex);
-            }
+            this._logger!.LogError(ex, $"Error performing GET in {nameof(GetStudents)}");
+            return this.StatusCode(500, ex);
+        }
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<CreateUpdateStudentDto>> PostStudent(
+        CreateUpdateStudentDto studentDto
+    )
+    {
+        try
+        {
+            var student = await this._studentsAppService!.AddStudentAsync(studentDto);
+
+            return this.CreatedAtAction(nameof(PostStudent), new { id = student.Id }, student);
+        }
+        catch (Exception ex)
+        {
+            this._logger!.LogError(ex, $"Error performing POST in {nameof(PostStudent)}");
+            return this.StatusCode(500, ex);
         }
     }
 }

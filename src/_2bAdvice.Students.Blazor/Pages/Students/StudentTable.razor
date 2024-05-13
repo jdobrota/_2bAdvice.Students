@@ -1,0 +1,56 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<table class="table table-responsive text-center">
+    <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>TypeOfStudy</th>
+            <th>DateOfBirth</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!this.Students.IsNullOrEmpty())
+        {
+            @foreach (var student in this.Students!)
+            {
+                <tr>
+                    <td>@student.FirstName</td>
+                    <td>@student.LastName</td>
+                    <td>@student.TypeOfStudy</td>
+                    <td>@student.DateOfBirth.ToString("dd. MM. yyyy")</td>
+                </tr>
+            }
+        }
+        @if (!this.Students!.Any() && !this.IsLoading)
+        {
+            <tr>
+                <td colspan="4">
+                    <div class="alert alert-info">
+                        <p>... No data ...</p>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (this.IsLoading)
+        {
+            <tr>
+                <td colspan="4">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (this.IsError)
+        {
+            <tr>
+                <td colspan="4">
+                    <div class="alert alert-warning">
+                        <p>An error occured while fetching data</p>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

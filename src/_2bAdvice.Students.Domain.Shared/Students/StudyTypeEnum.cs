@@ -1,8 +1,7 @@
-﻿namespace _2bAdvice.Students.Shared
+﻿namespace _2bAdvice.Students.Shared;
+
+public enum StudyTypeEnum
 {
-    public enum StudyTypeEnum
-    {
-        INTERNAL,
-        EXTERNAL
-    }
+    INTERNAL,
+    EXTERNAL
 }

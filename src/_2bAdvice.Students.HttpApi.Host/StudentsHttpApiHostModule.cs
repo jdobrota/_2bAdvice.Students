@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Autofac.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using _2bAdvice.Students.EntityFrameworkCore;
-using _2bAdvice.Students.MultiTenancy;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
@@ -20,6 +19,8 @@ using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
@@ -29,9 +30,9 @@ using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
-using Autofac.Core;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.OData;
+using _2bAdvice.Students.Configurations;
+using _2bAdvice.Students.EntityFrameworkCore;
+using _2bAdvice.Students.MultiTenancy;
 
 namespace _2bAdvice.Students;
 
@@ -50,15 +51,14 @@ public class StudentsHttpApiHostModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        PreConfigure<OpenIddictBuilder>(builder =>
-        {
+        this.PreConfigure<OpenIddictBuilder>(builder =>
             builder.AddValidation(options =>
             {
                 options.AddAudiences("Students");
                 options.UseLocalServer();
                 options.UseAspNetCore();
-            });
-        });
+            })
+        );
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -66,14 +66,13 @@ public class StudentsHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        ConfigureAuthentication(context);
-        ConfigureBundles();
-        ConfigureUrls(configuration);
-        ConfigureConventionalControllers();
-        ConfigureVirtualFileSystem(context);
-        ConfigureCors(context, configuration);
+        this.ConfigureAuthentication(context);
+        this.ConfigureBundles();
+        this.ConfigureUrls(configuration);
+        this.ConfigureVirtualFileSystem(context);
+        this.ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
-        ConfigureOData(context);
+        this.ConfigureOData(context);
     }
 
     private void ConfigureOData(ServiceConfigurationContext context)
@@ -83,36 +82,36 @@ public class StudentsHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
-        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        context.Services.ForwardIdentityAuthenticationForBearer(
+            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
+        );
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-        {
-            options.IsDynamicClaimsEnabled = true;
-        });
+            options.IsDynamicClaimsEnabled = true
+        );
     }
 
     private void ConfigureBundles()
     {
-        Configure<AbpBundlingOptions>(options =>
-        {
+        this.Configure<AbpBundlingOptions>(options =>
             options.StyleBundles.Configure(
                 LeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
-                }
-            );
-        });
+                bundle => bundle.AddFiles("/global-styles.css")
+            )
+        );
     }
 
     private void ConfigureUrls(IConfiguration configuration)
     {
-        Configure<AppUrlOptions>(options =>
+        this.Configure<AppUrlOptions>(options =>
         {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-            options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());
+            options.RedirectAllowedUrls.AddRange(
+                configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>()
+            );
 
             options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
-            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
+            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] =
+                "account/reset-password";
         });
     }
 
@@ -122,66 +121,74 @@ public class StudentsHttpApiHostModule : AbpModule
 
         if (hostingEnvironment.IsDevelopment())
         {
-            Configure<AbpVirtualFileSystemOptions>(options =>
+            this.Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.ReplaceEmbeddedByPhysical<StudentsDomainSharedModule>(
-                    Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Domain.Shared"));
+                    Path.Combine(
+                        hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Domain.Shared"
+                    )
+                );
                 options.FileSets.ReplaceEmbeddedByPhysical<StudentsDomainModule>(
-                    Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Domain"));
+                    Path.Combine(
+                        hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Domain"
+                    )
+                );
                 options.FileSets.ReplaceEmbeddedByPhysical<StudentsApplicationContractsModule>(
-                    Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Application.Contracts"));
+                    Path.Combine(
+                        hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Application.Contracts"
+                    )
+                );
                 options.FileSets.ReplaceEmbeddedByPhysical<StudentsApplicationModule>(
-                    Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Application"));
+                    Path.Combine(
+                        hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}_2bAdvice.Students.Application"
+                    )
+                );
             });
         }
     }
 
-    private void ConfigureConventionalControllers()
-    {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
-            options.ConventionalControllers.Create(typeof(StudentsApplicationModule).Assembly);
-        });
-    }
-
-    private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
+    private static void ConfigureSwaggerServices(
+        ServiceConfigurationContext context,
+        IConfiguration configuration
+    )
     {
         context.Services.AddAbpSwaggerGenWithOAuth(
             configuration["AuthServer:Authority"]!,
-            new Dictionary<string, string>
-            {
-                    {"Students", "Students API"}
-            },
+            new Dictionary<string, string> { { "Students", "Students API" } },
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Students API", Version = "v1" });
+                options.SwaggerDoc(
+                    "v1",
+                    new OpenApiInfo { Title = "Students API", Version = "v1" }
+                );
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
-            });
+            }
+        );
     }
 
     private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
     {
         context.Services.AddCors(options =>
-        {
             options.AddDefaultPolicy(builder =>
-            {
                 builder
-                    .WithOrigins(configuration["App:CorsOrigins"]?
-                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                        .Select(o => o.RemovePostFix("/"))
-                        .ToArray() ?? Array.Empty<string>())
+                    .WithOrigins(
+                        configuration["App:CorsOrigins"]
+                            ?.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                            .Select(o => o.RemovePostFix("/"))
+                            .ToArray() ?? Array.Empty<string>()
+                    )
                     .WithAbpExposedHeaders()
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials();
-            });
-        });
+                    .AllowCredentials()
+            )
+        );
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
