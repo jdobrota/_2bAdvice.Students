@@ -7,7 +7,7 @@ using _2bAdvice.Students.Blazor.Store;
 
 namespace _2bAdvice.Students.Blazor.Pages.Students;
 
-public partial class AddStudentForm
+public partial class StudentForm
 {
     [Inject]
     IState<StudentsState>? StudentsState { get; set; }
