@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using _2bAdvice.Students.Blazor.Services.Base;
@@ -8,13 +9,21 @@ namespace _2bAdvice.Students.Blazor.Store;
 
 public record StudentsState
 {
-    public List<StudentDto> Students = new();
+    public List<StudentDto>? Students { get; init; }
 
-    public bool IsError = false;
+    public bool IsError { get; init; }
 
-    public bool IsLoading = false;
+    public bool IsLoading { get; init; }
 
-    public bool IsInitialized = false;
+    public bool IsInitialized { get; init; }
+
+    public UpdateStudentDto? StudentToAddOrEdit { get; init; }
+
+    public bool IsSubmitting { get; init; }
+
+    public bool IsEditMode { get; init; }
+
+    public StudentDto? StudentToRemove { get; init; }
 }
 
 [FeatureState]
@@ -34,7 +43,17 @@ public class StudentsFeatureState : Feature<StudentsState>
         {
             Students = new(),
             IsError = false,
-            IsLoading = false
+            IsLoading = false,
+            StudentToAddOrEdit = new()
+            {
+                DateOfBirth = DateTime.Now,
+                FirstName = string.Empty,
+                LastName = string.Empty,
+                TypeOfStudy = StudyTypeEnum.INTERNAL
+            },
+            IsSubmitting = false,
+            IsEditMode = false,
+            StudentToRemove = new(),
         };
     }
 }

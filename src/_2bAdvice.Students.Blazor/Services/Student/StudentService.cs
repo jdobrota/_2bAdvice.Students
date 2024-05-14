@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +15,22 @@ public class StudentService : BaseHttpService, IStudentService
     public StudentService(IClient httpClient)
     {
         this._httpClient = httpClient;
+    }
+
+    public async Task<Response<int>> DeleteStudentAsync(Guid id)
+    {
+        Response<int> response = new();
+
+        try
+        {
+            await this._httpClient!.StudentsDELETEAsync(id);
+        }
+        catch (ApiException ex)
+        {
+            response = this.ConvertApiExceptions<int>(ex);
+        }
+
+        return response;
     }
 
     public async Task<Response<List<StudentDto>>> GetStudentsAsync()
@@ -33,13 +50,29 @@ public class StudentService : BaseHttpService, IStudentService
         return response;
     }
 
-    public async Task<Response<int>> PostStudentAsync(CreateUpdateStudentDto body)
+    public async Task<Response<int>> PostStudentAsync(CreateStudentDto student)
     {
         Response<int> response = new();
 
         try
         {
-            await this._httpClient!.StudentsAsync(body);
+            await this._httpClient!.StudentsPOSTAsync(student);
+        }
+        catch (ApiException ex)
+        {
+            response = this.ConvertApiExceptions<int>(ex);
+        }
+
+        return response;
+    }
+
+    public async Task<Response<int>> PutStudentAsync(UpdateStudentDto student)
+    {
+        Response<int> response = new();
+
+        try
+        {
+            await this._httpClient!.StudentsPUTAsync(student.Id, student);
         }
         catch (ApiException ex)
         {

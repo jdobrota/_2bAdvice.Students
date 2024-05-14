@@ -1,0 +1,82 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<EditForm Model="Student" OnValidSubmit="HandleSubmitForm">
+    <DataAnnotationsValidator />
+    <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addStudentModalLabel">@(IsEditMode ? "Edit student" : "Add student")</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group mt-2">
+            <label for="firstName">First Name</label>
+            <InputText class="form-control" @bind-Value="Student!.FirstName" placeholder="Student's first name" disabled="@IsSubmitting" required/>
+            <ValidationMessage For="@(() => Student!.FirstName)" />
+        </div>
+        <div class="form-group mt-2">
+            <label for="lastName">Last Name</label>
+            <InputText class="form-control" @bind-Value="Student!.LastName" placeholder="Student's last name" disabled="@IsSubmitting" required />
+            <ValidationMessage For="@(() => Student!.LastName)" />
+        </div>
+        <div class="form-group mt-2">
+            <label for="dateOfBirth">Date of Birth</label>
+            <InputDate class="form-control" @bind-Value="Student!.DateOfBirth" disabled="@IsSubmitting"  required />
+        </div>
+        <div class="form-group mt-2">
+            <label for="typeOfStudy">Type of study</label>
+            <InputSelect class="form-control" @bind-Value="Student!.TypeOfStudy" disabled="@IsSubmitting" required>
+                <option value="selectType" selected disabled>-- Select Type of study --</option>
+                @foreach (var type in Enum.GetValues(typeof(StudyTypeEnum)))
+                {
+                    <option value=@type>@type</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+    <div class="modal-footer">
+        @if (IsEditMode)
+        {
+            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary mt-2" disabled="@IsSubmitting">
+                <span class="oi oi-media-skip-backward" aria-hidden="true"></span> Back To List
+            </button>
+            <button type="submit" data-bs-dismiss="modal" class="btn btn-primary mt-2" disabled="@IsSubmitting">
+                <span class="bi bi-pencil" aria-hidden="true" />
+                Edit and Close
+            </button>
+            <button class="btn btn-primary mt-2" type="submit" disabled="@IsSubmitting">
+                @if (IsSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    <span role="status">Loading...</span>
+                }
+                else
+                {
+                    <span class="bi bi-pencil" aria-hidden="true" />
+                    <span role="status">Edit</span>
+                }
+            </button>
+        }
+        else
+        {
+            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary mt-2" disabled="@IsSubmitting">
+                <span class="oi oi-media-skip-backward" aria-hidden="true"></span> Back To List
+            </button>
+            <button type="submit" data-bs-dismiss="modal" class="btn btn-success mt-2" disabled="@IsSubmitting">
+                <span class="bi bi-plus-square" aria-hidden="true" />
+                Add and Close
+            </button>
+            <button class="btn btn-success mt-2" type="submit" disabled="@IsSubmitting">
+                @if (IsSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    <span role="status">Loading...</span>
+                }
+                else
+                {
+                    <span class="bi bi-plus-square" aria-hidden="true" />
+                    <span role="status">Add</span>
+                }
+            </button>
+        }
+    </div>
+</EditForm>

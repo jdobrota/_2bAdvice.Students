@@ -19,14 +19,51 @@ public class SetStudentsErrorAction { }
 
 public class SetStudentsLoadingAction { }
 
-public class LoadStudentsAction() { }
+public class LoadStudentsAction { }
 
-//public class AddStudentAction
-//{
-//    public CreateUpdateStudentDto Student { get; }
+public class SetStudentForAddOrEditAction
+{
+    public UpdateStudentDto Student { get; }
 
-//    public AddStudentAction(CreateUpdateStudentDto student)
-//    {
-//        this.Student = student;
-//    }
-//}
+    public bool IsEditMode { get; set; }
+
+    public SetStudentForAddOrEditAction(UpdateStudentDto student, bool isEditMode)
+    {
+        this.Student = student;
+        this.IsEditMode = isEditMode;
+    }
+}
+
+public class SetStudentForAddAction
+{
+    public UpdateStudentDto Student { get; }
+
+    public SetStudentForAddAction(UpdateStudentDto student)
+    {
+        this.Student = student;
+    }
+}
+
+public class SetStudentForEditAction
+{
+    public UpdateStudentDto Student { get; }
+
+    public SetStudentForEditAction(UpdateStudentDto student)
+    {
+        this.Student = student;
+    }
+}
+
+public class SetStudentAddedOrEditedAction { }
+
+public class SetAddStudentSubmittingAction { }
+
+public class DeleteStudentAction
+{
+    public StudentDto Student { get; }
+
+    public DeleteStudentAction(StudentDto student)
+    {
+        this.Student = student;
+    }
+}

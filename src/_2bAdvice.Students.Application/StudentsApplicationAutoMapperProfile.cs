@@ -21,7 +21,7 @@ public class StudentsApplicationAutoMapperProfile : Profile
                 opt => opt.MapFrom(src => src.DateOfBirth.ToDateTime(TimeOnly.MinValue))
             );
 
-        this.CreateMap<CreateUpdateStudentDto, Student>()
+        this.CreateMap<CreateStudentDto, Student>()
             .ForMember(dest => dest.ExtraProperties, opt => opt.Ignore())
             .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
             .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -29,5 +29,14 @@ public class StudentsApplicationAutoMapperProfile : Profile
                 dest => dest.DateOfBirth,
                 opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DateOfBirth))
             );
+
+        this.CreateMap<UpdateStudentDto, Student>()
+            .ForMember(dest => dest.ExtraProperties, opt => opt.Ignore())
+            .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
+            .ForMember(
+                dest => dest.DateOfBirth,
+                opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DateOfBirth))
+            );
+        ;
     }
 }

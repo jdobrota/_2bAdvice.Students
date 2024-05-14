@@ -4,7 +4,7 @@ using _2bAdvice.Students.Shared;
 
 namespace _2bAdvice.Students.Students;
 
-public class CreateUpdateStudentDto
+public class CreateStudentDto
 {
     [Required]
     [StringLength(50)]

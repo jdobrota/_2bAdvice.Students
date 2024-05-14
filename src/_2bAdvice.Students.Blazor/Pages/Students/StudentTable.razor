@@ -1,12 +1,16 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-<table class="table table-responsive text-center">
+<StudentModal />
+
+<button type="button" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.AddStudent()"><span class="bi bi-plus-square" aria-hidden="true"></span>   Add Student</button>
+<table class="table align-middle table-responsive text-center">
     <thead>
         <tr>
-            <th>FirstName</th>
-            <th>LastName</th>
-            <th>TypeOfStudy</th>
-            <th>DateOfBirth</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Type Of Study</th>
+            <th>Date Of Birth</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -19,13 +23,21 @@
                     <td>@student.LastName</td>
                     <td>@student.TypeOfStudy</td>
                     <td>@student.DateOfBirth.ToString("dd. MM. yyyy")</td>
+                    <td>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.SetStudentForEdit(student)">
+                            <span class="bi bi-pencil" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger" @onclick="() => this.DeleteStudent(student)">
+                            <span class="bi bi-trash" aria-hidden="true"></span>
+                        </button>
+                        </td>
                 </tr>
             }
         }
         @if (!this.Students!.Any() && !this.IsLoading)
         {
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <div class="alert alert-info">
                         <p>... No data ...</p>
                     </div>
@@ -35,7 +47,7 @@
         @if (this.IsLoading)
         {
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <div class="spinner-border text-success" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -45,7 +57,7 @@
         @if (this.IsError)
         {
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <div class="alert alert-warning">
                         <p>An error occured while fetching data</p>
                     </div>

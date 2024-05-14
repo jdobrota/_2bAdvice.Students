@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
+using _2bAdvice.Students.Blazor.Services.Base;
 using _2bAdvice.Students.Blazor.Services.Student;
 
 namespace _2bAdvice.Students.Blazor.Store;
@@ -31,9 +33,51 @@ public static class StudentsReducer
         return state with { IsError = true };
     }
 
-    //[ReducerMethod]
-    //public static StudentsState OnAddStudent(StudentsState state, AddStudentAction action)
-    //{
-    //    return state;
-    //}
+    [ReducerMethod]
+    public static StudentsState OnSetAddOrEditStudent(
+        StudentsState state,
+        SetStudentForAddOrEditAction action
+    )
+    {
+        return state with { StudentToAddOrEdit = action.Student, };
+    }
+
+    [ReducerMethod]
+    public static StudentsState OnDeleteStudent(StudentsState state, DeleteStudentAction action)
+    {
+        return state with { StudentToRemove = action.Student, };
+    }
+
+    [ReducerMethod(typeof(SetStudentAddedOrEditedAction))]
+    public static StudentsState OnAddedOrEditedStudent(StudentsState state)
+    {
+        return state with
+        {
+            StudentToAddOrEdit = state.IsEditMode
+                ? state.StudentToAddOrEdit
+                : new()
+                {
+                    DateOfBirth = DateTime.Now,
+                    FirstName = string.Empty,
+                    LastName = string.Empty,
+                    TypeOfStudy = StudyTypeEnum.INTERNAL
+                },
+            IsSubmitting = false,
+        };
+    }
+
+    [ReducerMethod]
+    public static StudentsState OnSetStudentForAddOrEdit(
+        StudentsState state,
+        SetStudentForAddOrEditAction action
+    )
+    {
+        return state with { StudentToAddOrEdit = action.Student, IsEditMode = action.IsEditMode };
+    }
+
+    [ReducerMethod(typeof(SetAddStudentSubmittingAction))]
+    public static StudentsState OnSetSubmitting(StudentsState state)
+    {
+        return state with { IsSubmitting = true };
+    }
 }

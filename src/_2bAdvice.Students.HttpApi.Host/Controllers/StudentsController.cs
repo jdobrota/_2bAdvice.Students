@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using _2bAdvice.Students.Students;
 
@@ -60,9 +61,7 @@ public class StudentsController : ODataController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateUpdateStudentDto>> PostStudent(
-        CreateUpdateStudentDto studentDto
-    )
+    public async Task<ActionResult<CreateStudentDto>> PostStudent(CreateStudentDto studentDto)
     {
         try
         {
@@ -75,5 +74,51 @@ public class StudentsController : ODataController
             this._logger!.LogError(ex, $"Error performing POST in {nameof(PostStudent)}");
             return this.StatusCode(500, ex);
         }
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteStudent(Guid id)
+    {
+        try
+        {
+            var result = await this._studentsAppService!.DeleteStudentAsync(id);
+            if (!result)
+            {
+                this._logger!.LogWarning(
+                    $"{nameof(Student)} record not found: {nameof(DeleteStudent)} - ID: {id}"
+                );
+                return this.NotFound();
+            }
+
+            return this.NoContent();
+        }
+        catch (Exception ex)
+        {
+            this._logger!.LogError(
+                $"{nameof(Student)} error occured while deleting: {nameof(DeleteStudent)} - ID: {id}"
+            );
+            return this.StatusCode(500, ex);
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutStudent(Guid id, UpdateStudentDto student)
+    {
+        if (id != student.Id)
+        {
+            this._logger!.LogWarning($"Update ID invalid: {nameof(PutStudent)} - ID: {id}");
+            return this.BadRequest();
+        }
+
+        var result = await this._studentsAppService!.PutStudentAsync(id, student);
+        if (!result)
+        {
+            this._logger!.LogWarning(
+                $"{nameof(Student)} record not found: {nameof(PutStudent)} - ID: {id}"
+            );
+            return this.NotFound();
+        }
+
+        return this.NoContent();
     }
 }
