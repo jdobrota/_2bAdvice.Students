@@ -16,7 +16,14 @@ namespace _2bAdvice.Students.Controllers;
 [AllowAnonymous]
 public class StudentsController : ODataController
 {
+    /// <summary>
+    /// The logger
+    /// </summary>
     private readonly ILogger? _logger;
+
+    /// <summary>
+    /// The students application service
+    /// </summary>
     private readonly IStudentsAppService? _studentsAppService;
 
     /// <summary>
@@ -41,8 +48,7 @@ public class StudentsController : ODataController
     /// Gets the students.
     /// </summary>
     /// <returns>
-    ///   <br />
-    /// </returns>
+    /// Task&lt;ActionResult&lt;List&lt;StudentDto&gt;&gt;&gt; <br /></returns>
     [HttpGet]
     [EnableQuery]
     public async Task<ActionResult<List<StudentDto>>> GetStudents()
@@ -60,6 +66,15 @@ public class StudentsController : ODataController
         }
     }
 
+    /// <summary>
+    /// Posts the student.
+    /// </summary>
+    /// <param name="studentDto">
+    /// The student dto.
+    /// </param>
+    /// <returns>
+    /// Task&lt;ActionResult&lt;CreateStudentDto&gt;&gt;
+    /// </returns>
     [HttpPost]
     public async Task<ActionResult<CreateStudentDto>> PostStudent(CreateStudentDto studentDto)
     {
@@ -76,6 +91,15 @@ public class StudentsController : ODataController
         }
     }
 
+    /// <summary>
+    /// Deletes the student.
+    /// </summary>
+    /// <param name="id">
+    /// The identifier.
+    /// </param>
+    /// <returns>
+    /// Task&lt;IActionResult&gt;
+    /// </returns>
     [HttpDelete]
     public async Task<IActionResult> DeleteStudent(Guid id)
     {
@@ -101,6 +125,18 @@ public class StudentsController : ODataController
         }
     }
 
+    /// <summary>
+    /// Puts the student.
+    /// </summary>
+    /// <param name="id">
+    /// The identifier.
+    /// </param>
+    /// <param name="student">
+    /// The student.
+    /// </param>
+    /// <returns>
+    /// Task&lt;IActionResult&gt;
+    /// </returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> PutStudent(Guid id, UpdateStudentDto student)
     {

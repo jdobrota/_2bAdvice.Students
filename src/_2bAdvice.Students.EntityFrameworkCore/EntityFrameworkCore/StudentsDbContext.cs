@@ -78,14 +78,14 @@ public class StudentsDbContext
 
         //builder.Entity<YourEntity>(b =>
         //{
-        //    b.ToTable(StudentsConsts.DbTablePrefix + "YourEntities", StudentsConsts.DbSchema);
+        //    b.ToTable(StudentsConsts.CDbTablePrefix + "YourEntities", StudentsConsts.CDbSchema);
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
 
         builder.Entity<Student>(s =>
         {
-            s.ToTable(StudentsConsts.DbTablePrefix + "Students", StudentsConsts.DbSchema);
+            s.ToTable(StudentsConsts.CDbTablePrefix + "Students", StudentsConsts.CDbSchema);
             s.ConfigureByConvention(); //auto configure for the base class props
             s.Property(x => x.LastName).IsRequired().HasMaxLength(128);
         });

@@ -12,6 +12,9 @@ namespace _2bAdvice.Students;
  */
 public class StudentsAppService : ApplicationService, IStudentsAppService
 {
+    /// <summary>
+    /// The student repository
+    /// </summary>
     private readonly IRepository<Student, Guid>? _studentRepository;
 
     /// <summary>Initializes a new instance of the <see cref="StudentsAppService" /> class.</summary>
@@ -22,6 +25,14 @@ public class StudentsAppService : ApplicationService, IStudentsAppService
         this._studentRepository = studentRepository;
     }
 
+    /// <summary>
+    /// Adds the student asynchronous.
+    /// </summary>
+    /// <param name="studentDto">
+    /// The student dto.
+    /// </param>
+    /// <returns>
+    /// Task&lt;Student&gt;<br /></returns>
     public async Task<Student> AddStudentAsync(CreateStudentDto studentDto)
     {
         var student = this.ObjectMapper.Map<CreateStudentDto, Student>(studentDto);
@@ -32,8 +43,7 @@ public class StudentsAppService : ApplicationService, IStudentsAppService
     /// Gets the students dto asynchronous.
     /// </summary>
     /// <returns>
-    ///   <br />
-    /// </returns>
+    /// Task&lt;List&lt;StudentDto&gt;&gt;<br /></returns>
     public async Task<List<StudentDto>> GetStudentsDtoAsync()
     {
         var students = await this._studentRepository!.GetListAsync();
@@ -41,6 +51,14 @@ public class StudentsAppService : ApplicationService, IStudentsAppService
         return studentDto;
     }
 
+    /// <summary>
+    /// Deletes the student asynchronous.
+    /// </summary>
+    /// <param name="id">
+    /// The identifier.
+    /// </param>
+    /// <returns>
+    /// Task&lt;bool&gt;<br /></returns>
     public async Task<bool> DeleteStudentAsync(Guid id)
     {
         var student = await this._studentRepository!.GetAsync(s => s.Id == id);
@@ -53,6 +71,17 @@ public class StudentsAppService : ApplicationService, IStudentsAppService
         return true;
     }
 
+    /// <summary>
+    /// Puts the student asynchronous.
+    /// </summary>
+    /// <param name="id">
+    /// The identifier.
+    /// </param>
+    /// <param name="studentDto">
+    /// The student dto.
+    /// </param>
+    /// <returns>
+    /// Task&lt;bool&gt;<br /></returns>
     public async Task<bool> PutStudentAsync(Guid id, UpdateStudentDto studentDto)
     {
         var student = await this._studentRepository!.GetAsync(s => s.Id == id);

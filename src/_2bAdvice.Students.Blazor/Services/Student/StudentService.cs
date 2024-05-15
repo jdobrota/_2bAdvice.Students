@@ -10,13 +10,30 @@ namespace _2bAdvice.Students.Blazor.Services.Student;
 
 public class StudentService : BaseHttpService, IStudentService
 {
+    /// <summary>
+    /// The HTTP client
+    /// </summary>
     private readonly IClient? _httpClient;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StudentService" /> class.
+    /// </summary>
+    /// <param name="httpClient">
+    /// The HTTP client.
+    /// </param>
     public StudentService(IClient httpClient)
     {
         this._httpClient = httpClient;
     }
 
+    /// <summary>
+    /// Deletes the student asynchronous.
+    /// </summary>
+    /// <param name="id">
+    /// The identifier.
+    /// </param>
+    /// <returns>
+    /// Task&lt;Response&lt;int&gt;&gt;<br /></returns>
     public async Task<Response<int>> DeleteStudentAsync(Guid id)
     {
         Response<int> response = new();
@@ -33,6 +50,11 @@ public class StudentService : BaseHttpService, IStudentService
         return response;
     }
 
+    /// <summary>
+    /// Gets the students asynchronous.
+    /// </summary>
+    /// <returns>
+    /// Task&lt;Response&lt;List&lt;StudentDto&gt;&gt;&gt;<br /></returns>
     public async Task<Response<List<StudentDto>>> GetStudentsAsync()
     {
         Response<List<StudentDto>> response;
@@ -50,6 +72,14 @@ public class StudentService : BaseHttpService, IStudentService
         return response;
     }
 
+    /// <summary>
+    /// Posts the student asynchronous.
+    /// </summary>
+    /// <param name="student">
+    /// The student.
+    /// </param>
+    /// <returns>
+    /// Task&lt;Response&lt;int&gt;&gt;<br /></returns>
     public async Task<Response<int>> PostStudentAsync(CreateStudentDto student)
     {
         Response<int> response = new();
@@ -66,6 +96,14 @@ public class StudentService : BaseHttpService, IStudentService
         return response;
     }
 
+    /// <summary>
+    /// Puts the student asynchronous.
+    /// </summary>
+    /// <param name="student">
+    /// The student.
+    /// </param>
+    /// <returns>
+    /// Task&lt;Response&lt;int&gt;&gt;<br /></returns>
     public async Task<Response<int>> PutStudentAsync(UpdateStudentDto student)
     {
         Response<int> response = new();

@@ -2,7 +2,7 @@
 
 public static class StudentsConsts
 {
-    public const string DbTablePrefix = "App";
+    public const string CDbTablePrefix = "App";
 
-    public const string DbSchema = null;
+    public const string CDbSchema = null;
 }
