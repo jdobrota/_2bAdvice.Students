@@ -53,13 +53,13 @@ public class StudentService : BaseHttpService, IStudentService
     /// </summary>
     /// <returns>
     /// Task&lt;Response&lt;List&lt;StudentDto&gt;&gt;&gt;<br /></returns>
-    public async Task<Response<List<StudentDto>>> GetStudentsAsync(string parameters)
+    public async Task<Response<List<StudentDto>>> GetStudentsAsync(string? parameters)
     {
         Response<List<StudentDto>> response;
 
         try
         {
-            var data = await this._httpClient!.StudentsAllAsync(parameters);
+            var data = await this._httpClient!.StudentsAllAsync();
             response = new Response<List<StudentDto>> { Data = data.ToList(), Success = true };
         }
         catch (ApiException ex)

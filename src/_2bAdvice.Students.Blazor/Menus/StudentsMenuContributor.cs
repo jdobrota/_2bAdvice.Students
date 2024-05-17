@@ -58,6 +58,23 @@ public class StudentsMenuContributor : IMenuContributor
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
 
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                StudentsMenus.Schools,
+                l["Menu:Schools"],
+                "/Schools",
+                icon: "fa fa-building"
+            )
+        );
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                StudentsMenus.Students,
+                l["Menu:Students"],
+                "/Students",
+                icon: "fa fa-user"
+            )
+        );
+
         return Task.CompletedTask;
     }
 

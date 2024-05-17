@@ -2,6 +2,7 @@
 @using Volo.Abp.MultiTenancy
 @inherits StudentsComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@using _2bAdvice.Students.Blazor.Pages.Students
 
 <Fluxor.Blazor.Web.StoreInitializer />
 
@@ -11,7 +12,7 @@
             <h5 class="m-1"> <i class="fas fa-rocket"></i> Congratulations, <strong>Students</strong> is successfully running!</h5>
         </Badge>
 
-        <h1>Welcome to the student list</h1>
+        <h1>@L["ShortWelcomeMessage"]</h1>
 
         <p class="lead px-lg-5 mx-lg-5">@L["LongWelcomeMessage"]</p>
 
@@ -25,9 +26,9 @@
 
     @if (CurrentUser.IsAuthenticated)
     {
-        <div class="card">
-            <div class="card-body">
-                <_2bAdvice.Students.Blazor.Pages.Students.StudentTable/>
+        <div class="container">
+            <div class="p-5 text-center">
+                <h4 class="m1">@L["WelcomeNavigateMessage"]</h4>
             </div>
         </div>
     }

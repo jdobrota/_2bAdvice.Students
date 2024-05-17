@@ -3,6 +3,10 @@
   "texts": {
     "Menu:Home": "Home",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This application is used to display students."
+    "LongWelcomeMessage": "This application is used to display students and schools registered in system.",
+    "ShortWelcomeMessage": "Welcome to the Education registry app",
+    "Menu:Schools": "Schools",
+    "Menu:Students": "Students",
+    "WelcomeNavigateMessage": "Please navigate in left side menu to view School list and Student list"
   }
 }

@@ -13,5 +13,8 @@ public class StudentsBlazorAutoMapperProfile : Profile
         //Define your AutoMapper configuration here for the Blazor project.
         this.CreateMap<StudentDto, UpdateStudentDto>();
         this.CreateMap<UpdateStudentDto, CreateStudentDto>();
+
+        this.CreateMap<SchoolDto, UpdateSchoolDto>();
+        this.CreateMap<UpdateSchoolDto, CreateSchoolDto>();
     }
 }

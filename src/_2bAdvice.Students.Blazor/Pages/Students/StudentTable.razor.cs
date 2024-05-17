@@ -5,7 +5,8 @@ using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Volo.Abp.ObjectMapping;
 using _2bAdvice.Students.Blazor.Services.Base;
-using _2bAdvice.Students.Blazor.Store;
+using _2bAdvice.Students.Blazor.Store.Schools;
+using _2bAdvice.Students.Blazor.Store.Students;
 
 namespace _2bAdvice.Students.Blazor.Pages.Students;
 
@@ -28,6 +29,15 @@ public partial class StudentTable
     /// </value>
     [Inject]
     IState<StudentsState>? StudentsState { get; set; }
+
+    /// <summary>
+    /// Gets or sets the state of the schools.
+    /// </summary>
+    /// <value>
+    /// The state of the schools.
+    /// </value>
+    [Inject]
+    IState<SchoolsState>? SchoolsState { get; set; }
 
     /// <summary>
     /// Gets or sets the dispatcher.
@@ -70,6 +80,10 @@ public partial class StudentTable
     /// </summary>
     protected override async Task OnInitializedAsync()
     {
+        if (this.SchoolsState!.Value.IsInitialized == false)
+        {
+            this.Dispatcher!.Dispatch(new LoadSchoolsAction());
+        }
         if (this.StudentsState!.Value.IsInitialized == false)
         {
             this.Dispatcher!.Dispatch(new LoadStudentsAction());

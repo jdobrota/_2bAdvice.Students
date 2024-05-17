@@ -13,7 +13,7 @@ public interface IStudentService
     /// <returns>
     ///   <br />
     /// </returns>
-    Task<Response<List<StudentDto>>> GetStudentsAsync(string parameters);
+    Task<Response<List<StudentDto>>> GetStudentsAsync(string? parameters);
 
     /// <summary>
     /// Posts the student asynchronous.

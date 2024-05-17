@@ -3,6 +3,10 @@
   "texts": {
     "Menu:Home": "Domov",
     "Welcome": "Vitajte",
-    "LongWelcomeMessage": "Vitajte v aplikácii. Táto aplikácia slúži na zobrazenie študentov."
+    "LongWelcomeMessage": "Táto aplikácia slúži na zobrazenie študentov a škôl zaregistrovaných v systéme.",
+    "ShortWelcomeMessage": "Vitajte v aplikácii Education registry",
+    "Menu:Schools": "Školy",
+    "Menu:Students": "Študenti",
+    "WelcomeNavigateMessage": "Prosím použite navigáciu v ľavom menu pre zobrazenie zoznamu škôl a zoznamu študentov"
   }
 }

@@ -5,7 +5,7 @@ using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Volo.Abp.ObjectMapping;
 using _2bAdvice.Students.Blazor.Services.Base;
-using _2bAdvice.Students.Blazor.Store;
+using _2bAdvice.Students.Blazor.Store.Schools;
 
 namespace _2bAdvice.Students.Blazor.Pages.Schools;
 
@@ -21,13 +21,13 @@ public partial class SchoolTable
     IObjectMapper? ObjectMapper { get; set; }
 
     /// <summary>
-    /// Gets or sets the state of the students.
+    /// Gets or sets the state of the schools.
     /// </summary>
     /// <value>
-    /// The state of the students.
+    /// The state of the schools.
     /// </value>
     [Inject]
-    IState<StudentsState>? StudentsState { get; set; }
+    IState<SchoolsState>? SchoolsState { get; set; }
 
     /// <summary>
     /// Gets or sets the dispatcher.
@@ -39,12 +39,20 @@ public partial class SchoolTable
     IDispatcher? Dispatcher { get; set; }
 
     /// <summary>
+    /// Gets the students.
+    /// </summary>
+    /// <value>
+    /// The students.
+    /// </value>
+    private List<SchoolDto>? Schools => this.SchoolsState!.Value.Schools;
+
+    /// <summary>
     /// Gets a value indicating whether this instance is loading.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this instance is loading; otherwise, <c>false</c>.
     /// </value>
-    private bool IsLoading => this.StudentsState!.Value.IsLoading;
+    private bool IsLoading => this.SchoolsState!.Value.IsLoading;
 
     /// <summary>
     /// Gets a value indicating whether this instance is error.
@@ -52,14 +60,52 @@ public partial class SchoolTable
     /// <value>
     ///   <c>true</c> if this instance is error; otherwise, <c>false</c>.
     /// </value>
-    private bool IsError => this.StudentsState!.Value.IsError;
+    private bool IsError => this.SchoolsState!.Value.IsError;
 
-    [Parameter]
     /// <summary>
-    /// Gets the students.
+    /// Method invoked when the component is ready to start, having received its
+    /// initial parameters from its parent in the render tree.
+    /// Override this method if you will perform an asynchronous operation and
+    /// want the component to refresh when that operation is completed.
     /// </summary>
-    /// <value>
-    /// The students.
-    /// </value>
-    public SchoolDto? School { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (this.SchoolsState!.Value.IsInitialized == false)
+        {
+            this.Dispatcher!.Dispatch(new LoadSchoolsAction());
+        }
+        await base.OnInitializedAsync();
+    }
+
+    /// <summary>
+    /// Deletes the school.
+    /// </summary>
+    /// <param name="school">
+    /// The school.
+    /// </param>
+    private void DeleteSchool(SchoolDto school)
+    {
+        this.Dispatcher!.Dispatch(new DeleteSchoolAction(school));
+    }
+
+    /// <summary>
+    /// Sets the school for edit.
+    /// </summary>
+    /// <param name="school">
+    /// The school.
+    /// </param>
+    private void SetSchoolForEdit(SchoolDto school)
+    {
+        var schoolCreateDto = this.ObjectMapper!.Map<SchoolDto, UpdateSchoolDto>(school);
+
+        this.Dispatcher!.Dispatch(new SetSchoolForAddOrEditAction(schoolCreateDto, true));
+    }
+
+    /// <summary>
+    /// Adds the school.
+    /// </summary>
+    private void AddSchool()
+    {
+        this.Dispatcher!.Dispatch(new SetSchoolForAddOrEditAction(new UpdateSchoolDto(), false));
+    }
 }

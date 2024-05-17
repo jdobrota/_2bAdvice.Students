@@ -28,69 +28,73 @@ public class StudentsDbMigrationService : ITransientDependency
         IDataSeeder dataSeeder,
         IEnumerable<IStudentsDbSchemaMigrator> dbSchemaMigrators,
         ITenantRepository tenantRepository,
-        ICurrentTenant currentTenant)
+        ICurrentTenant currentTenant
+    )
     {
-        _dataSeeder = dataSeeder;
-        _dbSchemaMigrators = dbSchemaMigrators;
-        _tenantRepository = tenantRepository;
-        _currentTenant = currentTenant;
+        this._dataSeeder = dataSeeder;
+        this._dbSchemaMigrators = dbSchemaMigrators;
+        this._tenantRepository = tenantRepository;
+        this._currentTenant = currentTenant;
 
-        Logger = NullLogger<StudentsDbMigrationService>.Instance;
+        this.Logger = NullLogger<StudentsDbMigrationService>.Instance;
     }
 
     public async Task MigrateAsync()
     {
-        var initialMigrationAdded = AddInitialMigrationIfNotExist();
+        var initialMigrationAdded = this.AddInitialMigrationIfNotExist();
 
         if (initialMigrationAdded)
         {
             return;
         }
 
-        Logger.LogInformation("Started database migrations...");
+        this.Logger.LogInformation("Started database migrations...");
 
-        await MigrateDatabaseSchemaAsync();
-        await SeedDataAsync();
+        await this.MigrateDatabaseSchemaAsync();
+        await this.SeedDataAsync();
 
-        Logger.LogInformation($"Successfully completed host database migrations.");
+        this.Logger.LogInformation($"Successfully completed host database migrations.");
 
-        var tenants = await _tenantRepository.GetListAsync(includeDetails: true);
+        var tenants = await this._tenantRepository.GetListAsync(includeDetails: true);
 
         var migratedDatabaseSchemas = new HashSet<string>();
         foreach (var tenant in tenants)
         {
-            using (_currentTenant.Change(tenant.Id))
+            using (this._currentTenant.Change(tenant.Id))
             {
                 if (tenant.ConnectionStrings.Any())
                 {
-                    var tenantConnectionStrings = tenant.ConnectionStrings
-                        .Select(x => x.Value)
+                    var tenantConnectionStrings = tenant
+                        .ConnectionStrings.Select(x => x.Value)
                         .ToList();
 
                     if (!migratedDatabaseSchemas.IsSupersetOf(tenantConnectionStrings))
                     {
-                        await MigrateDatabaseSchemaAsync(tenant);
+                        await this.MigrateDatabaseSchemaAsync(tenant);
 
                         migratedDatabaseSchemas.AddIfNotContains(tenantConnectionStrings);
                     }
                 }
 
-                await SeedDataAsync(tenant);
+                await this.SeedDataAsync(tenant);
             }
 
-            Logger.LogInformation($"Successfully completed {tenant.Name} tenant database migrations.");
+            this.Logger.LogInformation(
+                $"Successfully completed {tenant.Name} tenant database migrations."
+            );
         }
 
-        Logger.LogInformation("Successfully completed all database migrations.");
-        Logger.LogInformation("You can safely end this process...");
+        this.Logger.LogInformation("Successfully completed all database migrations.");
+        this.Logger.LogInformation("You can safely end this process...");
     }
 
     private async Task MigrateDatabaseSchemaAsync(Tenant? tenant = null)
     {
-        Logger.LogInformation(
-            $"Migrating schema for {(tenant == null ? "host" : tenant.Name + " tenant")} database...");
+        this.Logger.LogInformation(
+            $"Migrating schema for {(tenant == null ? "host" : tenant.Name + " tenant")} database..."
+        );
 
-        foreach (var migrator in _dbSchemaMigrators)
+        foreach (var migrator in this._dbSchemaMigrators)
         {
             await migrator.MigrateAsync();
         }
@@ -98,11 +102,20 @@ public class StudentsDbMigrationService : ITransientDependency
 
     private async Task SeedDataAsync(Tenant? tenant = null)
     {
-        Logger.LogInformation($"Executing {(tenant == null ? "host" : tenant.Name + " tenant")} database seed...");
+        this.Logger.LogInformation(
+            $"Executing {(tenant == null ? "host" : tenant.Name + " tenant")} database seed..."
+        );
 
-        await _dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
-            .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName, IdentityDataSeedContributor.AdminEmailDefaultValue)
-            .WithProperty(IdentityDataSeedContributor.AdminPasswordPropertyName, IdentityDataSeedContributor.AdminPasswordDefaultValue)
+        await this._dataSeeder.SeedAsync(
+            new DataSeedContext(tenant?.Id)
+                .WithProperty(
+                    IdentityDataSeedContributor.AdminEmailPropertyName,
+                    IdentityDataSeedContributor.AdminEmailDefaultValue
+                )
+                .WithProperty(
+                    IdentityDataSeedContributor.AdminPasswordPropertyName,
+                    IdentityDataSeedContributor.AdminPasswordDefaultValue
+                )
         );
     }
 
@@ -110,7 +123,7 @@ public class StudentsDbMigrationService : ITransientDependency
     {
         try
         {
-            if (!DbMigrationsProjectExists())
+            if (!this.DbMigrationsProjectExists())
             {
                 return false;
             }
@@ -122,9 +135,9 @@ public class StudentsDbMigrationService : ITransientDependency
 
         try
         {
-            if (!MigrationsFolderExists())
+            if (!this.MigrationsFolderExists())
             {
-                AddInitialMigration();
+                this.AddInitialMigration();
                 return true;
             }
             else
@@ -134,32 +147,36 @@ public class StudentsDbMigrationService : ITransientDependency
         }
         catch (Exception e)
         {
-            Logger.LogWarning("Couldn't determinate if any migrations exist : " + e.Message);
+            this.Logger.LogWarning("Couldn't determinate if any migrations exist : " + e.Message);
             return false;
         }
     }
 
     private bool DbMigrationsProjectExists()
     {
-        var dbMigrationsProjectFolder = GetEntityFrameworkCoreProjectFolderPath();
+        var dbMigrationsProjectFolder = this.GetEntityFrameworkCoreProjectFolderPath();
 
         return dbMigrationsProjectFolder != null;
     }
 
     private bool MigrationsFolderExists()
     {
-        var dbMigrationsProjectFolder = GetEntityFrameworkCoreProjectFolderPath();
-        return dbMigrationsProjectFolder != null && Directory.Exists(Path.Combine(dbMigrationsProjectFolder, "Migrations"));
+        var dbMigrationsProjectFolder = this.GetEntityFrameworkCoreProjectFolderPath();
+        return dbMigrationsProjectFolder != null
+            && Directory.Exists(Path.Combine(dbMigrationsProjectFolder, "Migrations"));
     }
 
     private void AddInitialMigration()
     {
-        Logger.LogInformation("Creating initial migration...");
+        this.Logger.LogInformation("Creating initial migration...");
 
         string argumentPrefix;
         string fileName;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+            || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+        )
         {
             argumentPrefix = "-c";
             fileName = "/bin/bash";
@@ -170,8 +187,9 @@ public class StudentsDbMigrationService : ITransientDependency
             fileName = "cmd.exe";
         }
 
-        var procStartInfo = new ProcessStartInfo(fileName,
-            $"{argumentPrefix} \"abp create-migration-and-run-migrator \"{GetEntityFrameworkCoreProjectFolderPath()}\"\""
+        var procStartInfo = new ProcessStartInfo(
+            fileName,
+            $"{argumentPrefix} \"abp create-migration-and-run-migrator \"{this.GetEntityFrameworkCoreProjectFolderPath()}\"\""
         );
 
         try
@@ -186,7 +204,7 @@ public class StudentsDbMigrationService : ITransientDependency
 
     private string? GetEntityFrameworkCoreProjectFolderPath()
     {
-        var slnDirectoryPath = GetSolutionDirectoryPath();
+        var slnDirectoryPath = this.GetSolutionDirectoryPath();
 
         if (slnDirectoryPath == null)
         {
@@ -195,7 +213,8 @@ public class StudentsDbMigrationService : ITransientDependency
 
         var srcDirectoryPath = Path.Combine(slnDirectoryPath, "src");
 
-        return Directory.GetDirectories(srcDirectoryPath)
+        return Directory
+            .GetDirectories(srcDirectoryPath)
             .FirstOrDefault(d => d.EndsWith(".EntityFrameworkCore"));
     }
 
@@ -207,7 +226,12 @@ public class StudentsDbMigrationService : ITransientDependency
         {
             currentDirectory = Directory.GetParent(currentDirectory.FullName);
 
-            if (currentDirectory != null && Directory.GetFiles(currentDirectory.FullName).FirstOrDefault(f => f.EndsWith(".sln")) != null)
+            if (
+                currentDirectory != null
+                && Directory
+                    .GetFiles(currentDirectory.FullName)
+                    .FirstOrDefault(f => f.EndsWith(".sln")) != null
+            )
             {
                 return currentDirectory.FullName;
             }

@@ -1,9 +1,9 @@
-﻿using System;
-using AutoMapper;
+﻿using System.Collections.Generic;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using _2bAdvice.Students.Blazor.Services.Base;
-using _2bAdvice.Students.Blazor.Store;
+using _2bAdvice.Students.Blazor.Store.Schools;
+using _2bAdvice.Students.Blazor.Store.Students;
 
 namespace _2bAdvice.Students.Blazor.Pages.Students;
 
@@ -17,6 +17,15 @@ public partial class StudentForm
     /// </value>
     [Inject]
     IState<StudentsState>? StudentsState { get; set; }
+
+    /// <summary>
+    /// Gets or sets the state of the schools.
+    /// </summary>
+    /// <value>
+    /// The state of the schools.
+    /// </value>
+    [Inject]
+    IState<SchoolsState>? SchoolsState { get; set; }
 
     /// <summary>
     /// Gets or sets the dispatcher.
@@ -34,6 +43,14 @@ public partial class StudentForm
     /// The student.
     /// </value>
     private UpdateStudentDto Student => this.StudentsState!.Value.StudentToAddOrEdit!;
+
+    /// <summary>
+    /// Gets the schools.
+    /// </summary>
+    /// <value>
+    /// The schools.
+    /// </value>
+    private List<SchoolDto> Schools => this.SchoolsState!.Value.Schools!;
 
     /// <summary>
     /// Gets a value indicating whether this instance is submitting.

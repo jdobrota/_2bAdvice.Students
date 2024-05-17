@@ -1,49 +1,67 @@
-﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@using _2bAdvice.Students.Blazor.Pages.Students
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-<tr class="collapse" id=schoolTable_@School!.Id>
-    <td />
-    <td colspan="4">
-        <table class="table align-middle table-responsive text-center table-light m-0 border border-1 border-success">
-            <thead>
+<SchoolModal />
+
+<button type="button" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#SchoolModal" @onclick="() => this.AddSchool()"><span class="bi bi-plus-square" aria-hidden="true"></span>   Add School</button>
+<table class="table align-middle table-responsive text-center">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Type Of School</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!this.Schools.IsNullOrEmpty())
+        {
+            @foreach (var school in this.Schools!)
+            {
                 <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Type Of School</th>
+                    <td>@school.Name</td>
+                    <td>@school.Address</td>
+                    <td>@school.TypeOfSchool</td>
+                    <td>
+                        <button type="button" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#SchoolModal" @onclick="() => this.SetSchoolForEdit(school)" title="Modify School">
+                            <span class="bi bi-pencil" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger mx-1" @onclick="() => this.DeleteSchool(school)" title="Delete School">
+                            <span class="bi bi-trash" aria-hidden="true"></span>
+                        </button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @if (!this.School!.Equals(null))
-                {
-
-                    <tr>
-                        <td>@School.Name</td>
-                        <td>@School.Address</td>
-                        <td>@School.TypeOfSchool</td>
-                    </tr>
-
-                }
-                @if (this.IsLoading)
-                {
-                    <tr>
-                        <td colspan="3">
-                            <div class="spinner-border text-success" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </td>
-                    </tr>
-                }
-                @if (this.IsError)
-                {
-                    <tr>
-                        <td colspan="3">
-                            <div class="alert alert-warning">
-                                <p>An error occured while fetching data</p>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </td>
-</tr>
-    
+            }
+        }
+        @if (!this.Schools.IsNullOrEmpty() && !this.Schools!.Any() && !this.IsLoading)
+        {
+            <tr>
+                <td colspan="5">
+                    <div class="alert alert-info">
+                        <p>... No data ...</p>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (this.IsLoading)
+        {
+            <tr>
+                <td colspan="5">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (this.IsError)
+        {
+            <tr>
+                <td colspan="5">
+                    <div class="alert alert-warning">
+                        <p>An error occured while fetching data</p>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

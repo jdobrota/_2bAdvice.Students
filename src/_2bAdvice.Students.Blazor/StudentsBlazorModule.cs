@@ -21,6 +21,7 @@ using Volo.Abp.TenantManagement.Blazor.WebAssembly;
 using Volo.Abp.UI.Navigation;
 using _2bAdvice.Students.Blazor.Menus;
 using _2bAdvice.Students.Blazor.Services.Base;
+using _2bAdvice.Students.Blazor.Services.School;
 using _2bAdvice.Students.Blazor.Services.Student;
 
 namespace _2bAdvice.Students.Blazor;
@@ -58,6 +59,7 @@ public class StudentsBlazorModule : AbpModule
 
         context.Services.AddScoped<IClient, Client>();
         context.Services.AddScoped<IStudentService, StudentService>();
+        context.Services.AddScoped<ISchoolService, SchoolService>();
     }
 
     private void ConfigureRouter(ServiceConfigurationContext context)
