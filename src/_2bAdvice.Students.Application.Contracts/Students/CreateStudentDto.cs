@@ -44,4 +44,13 @@ public class CreateStudentDto
     [Required]
     [DataType(DataType.Date)]
     public DateTime DateOfBirth { get; set; }
+
+    /// <summary>
+    /// Gets or sets the school identifier.
+    /// </summary>
+    /// <value>
+    /// The school identifier.
+    /// </value>
+    [Required]
+    public Guid SchoolId { get; set; }
 }

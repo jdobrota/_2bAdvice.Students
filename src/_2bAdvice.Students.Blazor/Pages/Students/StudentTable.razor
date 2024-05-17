@@ -24,17 +24,27 @@
                     <td>@student.TypeOfStudy</td>
                     <td>@student.DateOfBirth.ToString("dd. MM. yyyy")</td>
                     <td>
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.SetStudentForEdit(student)">
+                        @if (!student.SchoolId.Equals(null) || !student.SchoolId.Equals(Guid.Empty))
+                        {
+                            <button type="button" class="btn btn-success mx-1" data-bs-toggle="collapse" data-bs-target="#schoolTable_@student.SchoolId" aria-expanded="false" aria-controls="schoolTable_@student.SchoolId" title="Show School">
+                                <span class="bi bi-arrow-bar-down" aria-hidden="true"></span>
+                            </button>
+                        }
+                        <button type="button" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.SetStudentForEdit(student)" title="Modify Student">
                             <span class="bi bi-pencil" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn btn-danger" @onclick="() => this.DeleteStudent(student)">
+                        <button type="button" class="btn btn-danger mx-1" @onclick="() => this.DeleteStudent(student)" title="Delete Student">
                             <span class="bi bi-trash" aria-hidden="true"></span>
                         </button>
-                        </td>
+                    </td>
                 </tr>
+                @if (!student.SchoolId.Equals(null) || !student.SchoolId.Equals(Guid.Empty))
+                {
+                    <_2bAdvice.Students.Blazor.Pages.Schools.SchoolTable School="@student.School" />
+                }
             }
         }
-        @if (!this.Students!.Any() && !this.IsLoading)
+        @if (!this.Students.IsNullOrEmpty() && !this.Students!.Any() && !this.IsLoading)
         {
             <tr>
                 <td colspan="5">

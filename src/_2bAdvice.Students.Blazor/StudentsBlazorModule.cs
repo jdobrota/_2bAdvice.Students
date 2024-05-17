@@ -52,10 +52,9 @@ public class StudentsBlazorModule : AbpModule
             config.ScanAssemblies(typeof(StudentsBlazorModule).Assembly).UseReduxDevTools()
         );
 
-        context.Services.AddScoped(sp => new HttpClient
-        {
-            BaseAddress = new Uri("https://localhost:44318")
-        });
+        var remoteApi = builder.Configuration["RemoteServices:Default:BaseUrl"];
+
+        context.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(remoteApi!) }); //"https://localhost:44318"
 
         context.Services.AddScoped<IClient, Client>();
         context.Services.AddScoped<IStudentService, StudentService>();

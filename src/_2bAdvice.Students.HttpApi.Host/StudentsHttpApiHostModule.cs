@@ -77,7 +77,9 @@ public class StudentsHttpApiHostModule : AbpModule
 
     private void ConfigureOData(ServiceConfigurationContext context)
     {
-        context.Services.AddControllers().AddOData(opt => opt.Select().Filter().Count().OrderBy());
+        context
+            .Services.AddControllers()
+            .AddOData(opt => opt.Select().Filter().Count().OrderBy().Expand());
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

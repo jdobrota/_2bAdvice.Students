@@ -13,6 +13,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using _2bAdvice.Students.Schools;
 using _2bAdvice.Students.Students;
 
 namespace _2bAdvice.Students.EntityFrameworkCore;
@@ -42,6 +43,7 @@ public class StudentsDbContext
 
     //Identity
     public DbSet<Student> Students { get; set; }
+    public DbSet<School> Schools { get; set; }
     public DbSet<IdentityUser> Users { get; set; }
     public DbSet<IdentityRole> Roles { get; set; }
     public DbSet<IdentityClaimType> ClaimTypes { get; set; }
@@ -88,6 +90,13 @@ public class StudentsDbContext
             s.ToTable(StudentsConsts.CDbTablePrefix + "Students", StudentsConsts.CDbSchema);
             s.ConfigureByConvention(); //auto configure for the base class props
             s.Property(x => x.LastName).IsRequired().HasMaxLength(128);
+        });
+
+        builder.Entity<School>(s =>
+        {
+            s.ToTable(StudentsConsts.CDbTablePrefix + "Schools", StudentsConsts.CDbSchema);
+            s.ConfigureByConvention(); //auto configure for the base class props
+            s.Property(x => x.Name).IsRequired().HasMaxLength(128);
         });
     }
 }

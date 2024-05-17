@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using _2bAdvice.Students.EntityFrameworkCore;
 using _2bAdvice.Students.Localization;
+using _2bAdvice.Students.Schools;
 using _2bAdvice.Students.Students;
 
 namespace _2bAdvice.Students;
@@ -19,6 +22,7 @@ public class StudentsAppService : ApplicationService, IStudentsAppService
 
     /// <summary>Initializes a new instance of the <see cref="StudentsAppService" /> class.</summary>
     /// <param name="studentRepository">The student repository.</param>
+    /// <param name="schoolRepository">The school repository.</param>
     public StudentsAppService(IRepository<Student, Guid>? studentRepository)
     {
         this.LocalizationResource = typeof(StudentsResource);
@@ -46,9 +50,15 @@ public class StudentsAppService : ApplicationService, IStudentsAppService
     /// Task&lt;List&lt;StudentDto&gt;&gt;<br /></returns>
     public async Task<List<StudentDto>> GetStudentsDtoAsync()
     {
-        var students = await this._studentRepository!.GetListAsync();
-        var studentDto = this.ObjectMapper.Map<List<Student>, List<StudentDto>>(students);
-        return studentDto;
+        var students = await this._studentRepository!.GetQueryableAsync();
+
+        var studentsWithSchool = await students.Include(s => s.School).ToListAsync();
+
+        var studentDtos = this.ObjectMapper!.Map<List<Student>, List<StudentDto>>(
+            studentsWithSchool
+        );
+
+        return studentDtos;
     }
 
     /// <summary>

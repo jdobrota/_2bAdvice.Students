@@ -6,14 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.Logging;
-using _2bAdvice.Students.Students;
+using _2bAdvice.Students.Schools;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace _2bAdvice.Students.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [AllowAnonymous]
-public class StudentsController : ODataController
+public class SchoolsController : ODataController
 {
     /// <summary>
     /// The logger
@@ -21,77 +23,77 @@ public class StudentsController : ODataController
     private readonly ILogger? _logger;
 
     /// <summary>
-    /// The students application service
+    /// The schools application service
     /// </summary>
-    private readonly IStudentsAppService? _studentsAppService;
+    private readonly ISchoolsAppService? _schoolsAppService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StudentsController" /> class.
+    /// Initializes a new instance of the <see cref="SchoolsController" /> class.
     /// </summary>
     /// <param name="logger">
     /// The logger.
     /// </param>
-    /// <param name="studentsAppService">
-    /// The students application service.
+    /// <param name="schoolsAppService">
+    /// The schools application service.
     /// </param>
-    public StudentsController(
+    public SchoolsController(
         ILogger<SchoolsController> logger,
-        IStudentsAppService studentsAppService
+        ISchoolsAppService schoolsAppService
     )
     {
         this._logger = logger;
-        this._studentsAppService = studentsAppService;
+        this._schoolsAppService = schoolsAppService;
     }
 
     /// <summary>
-    /// Gets the students.
+    /// Gets the schools.
     /// </summary>
     /// <returns>
-    /// Task&lt;ActionResult&lt;List&lt;StudentDto&gt;&gt;&gt; <br /></returns>
+    /// Task&lt;ActionResult&lt;List&lt;SchoolDto&gt;&gt;&gt; <br /></returns>
     [HttpGet]
     [EnableQuery]
-    public async Task<ActionResult<List<StudentDto>>> GetStudents()
+    public async Task<ActionResult<List<SchoolDto>>> GetSchools()
     {
         try
         {
-            var studentsDto = await this._studentsAppService!.GetStudentsDtoAsync();
+            var schoolsDto = await this._schoolsAppService!.GetSchoolsDtoAsync();
 
-            return this.Ok(studentsDto);
+            return this.Ok(schoolsDto);
         }
         catch (Exception ex)
         {
-            this._logger!.LogError(ex, $"Error performing GET in {nameof(GetStudents)}");
+            this._logger!.LogError(ex, $"Error performing GET in {nameof(GetSchools)}");
             return this.StatusCode(500, ex);
         }
     }
 
     /// <summary>
-    /// Posts the student.
+    /// Posts the school.
     /// </summary>
-    /// <param name="studentDto">
-    /// The student dto.
+    /// <param name="schoolDto">
+    /// The school dto.
     /// </param>
     /// <returns>
-    /// Task&lt;ActionResult&lt;CreateStudentDto&gt;&gt;
+    /// Task&lt;ActionResult&lt;CreateSchoolDto&gt;&gt;
     /// </returns>
     [HttpPost]
-    public async Task<ActionResult<CreateStudentDto>> PostStudent(CreateStudentDto studentDto)
+    public async Task<ActionResult<CreateSchoolDto>> PostSchool(CreateSchoolDto schoolDto)
     {
         try
         {
-            var student = await this._studentsAppService!.AddStudentAsync(studentDto);
+            var school = await this._schoolsAppService!.AddSchoolAsync(schoolDto);
 
-            return this.CreatedAtAction(nameof(PostStudent), new { id = student.Id }, student);
+            return this.CreatedAtAction(nameof(PostSchool), new { id = school.Id }, school);
         }
         catch (Exception ex)
         {
-            this._logger!.LogError(ex, $"Error performing POST in {nameof(PostStudent)}");
+            this._logger!.LogError(ex, $"Error performing POST in {nameof(PostSchool)}");
             return this.StatusCode(500, ex);
         }
     }
 
     /// <summary>
-    /// Deletes the student.
+    /// Deletes the school.
     /// </summary>
     /// <param name="id">
     /// The identifier.
@@ -100,15 +102,15 @@ public class StudentsController : ODataController
     /// Task&lt;IActionResult&gt;
     /// </returns>
     [HttpDelete]
-    public async Task<IActionResult> DeleteStudent(Guid id)
+    public async Task<IActionResult> DeleteSchool(Guid id)
     {
         try
         {
-            var result = await this._studentsAppService!.DeleteStudentAsync(id);
+            var result = await this._schoolsAppService!.DeleteSchoolAsync(id);
             if (!result)
             {
                 this._logger!.LogWarning(
-                    $"{nameof(Student)} record not found: {nameof(DeleteStudent)} - ID: {id}"
+                    $"{nameof(School)} record not found: {nameof(DeleteSchool)} - ID: {id}"
                 );
                 return this.NotFound();
             }
@@ -118,38 +120,38 @@ public class StudentsController : ODataController
         catch (Exception ex)
         {
             this._logger!.LogError(
-                $"{nameof(Student)} error occured while deleting: {nameof(DeleteStudent)} - ID: {id}"
+                $"{nameof(School)} error occured while deleting: {nameof(DeleteSchool)} - ID: {id}"
             );
             return this.StatusCode(500, ex);
         }
     }
 
     /// <summary>
-    /// Puts the student.
+    /// Puts the school.
     /// </summary>
     /// <param name="id">
     /// The identifier.
     /// </param>
     /// <param name="student">
-    /// The student.
+    /// The school.
     /// </param>
     /// <returns>
     /// Task&lt;IActionResult&gt;
     /// </returns>
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutStudent(Guid id, UpdateStudentDto student)
+    public async Task<IActionResult> PutSchool(Guid id, UpdateSchoolDto school)
     {
-        if (id != student.Id)
+        if (id != school.Id)
         {
-            this._logger!.LogWarning($"Update ID invalid: {nameof(PutStudent)} - ID: {id}");
+            this._logger!.LogWarning($"Update ID invalid: {nameof(PutSchool)} - ID: {id}");
             return this.BadRequest();
         }
 
-        var result = await this._studentsAppService!.PutStudentAsync(id, student);
+        var result = await this._schoolsAppService!.PutSchoolAsync(id, school);
         if (!result)
         {
             this._logger!.LogWarning(
-                $"{nameof(Student)} record not found: {nameof(PutStudent)} - ID: {id}"
+                $"{nameof(School)} record not found: {nameof(PutSchool)} - ID: {id}"
             );
             return this.NotFound();
         }

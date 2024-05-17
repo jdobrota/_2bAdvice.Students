@@ -58,7 +58,9 @@ public class StudentsEffects
     public async Task LoadStudents(IDispatcher dispatcher)
     {
         dispatcher.Dispatch(new SetStudentsLoadingAction());
-        var response = await this._studentService.GetStudentsAsync();
+        var response = await this._studentService.GetStudentsAsync(
+            this._studentsState.Value.StudentsQueryParameters!
+        );
         if (!response.Success)
         {
             dispatcher.Dispatch(new SetStudentsErrorAction());

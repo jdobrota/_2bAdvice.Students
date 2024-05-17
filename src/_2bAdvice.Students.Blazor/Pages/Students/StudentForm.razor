@@ -33,50 +33,25 @@
             </InputSelect>
         </div>
     </div>
-    <div class="modal-footer">
-        @if (IsEditMode)
-        {
-            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary mt-2" disabled="@IsSubmitting">
-                <span class="oi oi-media-skip-backward" aria-hidden="true"></span> Back To List
-            </button>
-            <button type="submit" data-bs-dismiss="modal" class="btn btn-primary mt-2" disabled="@IsSubmitting">
-                <span class="bi bi-pencil" aria-hidden="true" />
-                Edit and Close
-            </button>
-            <button class="btn btn-primary mt-2" type="submit" disabled="@IsSubmitting">
-                @if (IsSubmitting)
-                {
-                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                    <span role="status">Loading...</span>
-                }
-                else
-                {
-                    <span class="bi bi-pencil" aria-hidden="true" />
-                    <span role="status">Edit</span>
-                }
-            </button>
-        }
-        else
-        {
-            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary mt-2" disabled="@IsSubmitting">
-                <span class="oi oi-media-skip-backward" aria-hidden="true"></span> Back To List
-            </button>
-            <button type="submit" data-bs-dismiss="modal" class="btn btn-success mt-2" disabled="@IsSubmitting">
-                <span class="bi bi-plus-square" aria-hidden="true" />
-                Add and Close
-            </button>
-            <button class="btn btn-success mt-2" type="submit" disabled="@IsSubmitting">
-                @if (IsSubmitting)
-                {
-                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                    <span role="status">Loading...</span>
-                }
-                else
-                {
-                    <span class="bi bi-plus-square" aria-hidden="true" />
-                    <span role="status">Add</span>
-                }
-            </button>
-        }
+    <div class="modal-footer pt-2">
+        <button type="button" data-bs-dismiss="modal" class="btn btn-secondary" disabled="@IsSubmitting">
+            <span class="oi oi-media-skip-backward" aria-hidden="true"></span> Back To List
+        </button>
+        <button type="submit" data-bs-dismiss="modal" class="btn @(IsEditMode ? "btn-warning" : "btn-success")" disabled="@IsSubmitting">
+            <span class="bi @(IsEditMode ? "bi-pencil" : "bi-plus-square")" aria-hidden="true" />
+            @(IsEditMode ? "Edit and Close" : "Add and Close")
+        </button>
+        <button class="btn @(IsEditMode ? "btn-warning" : "btn-success")" type="submit" disabled="@IsSubmitting">
+            @if (IsSubmitting)
+            {
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span role="status">Loading...</span>
+            }
+            else
+            {
+                <span class="bi @(IsEditMode ? "bi-pencil" : "bi-plus-square")" aria-hidden="true" />
+                <span role="status">@(IsEditMode ? "Edit" : "Add")</span>
+            }
+        </button>
     </div>
 </EditForm>

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using _2bAdvice.Students.Blazor.Services.Base;
 
@@ -55,13 +53,13 @@ public class StudentService : BaseHttpService, IStudentService
     /// </summary>
     /// <returns>
     /// Task&lt;Response&lt;List&lt;StudentDto&gt;&gt;&gt;<br /></returns>
-    public async Task<Response<List<StudentDto>>> GetStudentsAsync()
+    public async Task<Response<List<StudentDto>>> GetStudentsAsync(string parameters)
     {
         Response<List<StudentDto>> response;
 
         try
         {
-            var data = await this._httpClient!.StudentsAllAsync();
+            var data = await this._httpClient!.StudentsAllAsync(parameters);
             response = new Response<List<StudentDto>> { Data = data.ToList(), Success = true };
         }
         catch (ApiException ex)

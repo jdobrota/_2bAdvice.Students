@@ -1,0 +1,49 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+<tr class="collapse" id=schoolTable_@School!.Id>
+    <td />
+    <td colspan="4">
+        <table class="table align-middle table-responsive text-center table-light m-0 border border-1 border-success">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Type Of School</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!this.School!.Equals(null))
+                {
+
+                    <tr>
+                        <td>@School.Name</td>
+                        <td>@School.Address</td>
+                        <td>@School.TypeOfSchool</td>
+                    </tr>
+
+                }
+                @if (this.IsLoading)
+                {
+                    <tr>
+                        <td colspan="3">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (this.IsError)
+                {
+                    <tr>
+                        <td colspan="3">
+                            <div class="alert alert-warning">
+                                <p>An error occured while fetching data</p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </td>
+</tr>
+    

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components;
 using Volo.Abp.ObjectMapping;
 using _2bAdvice.Students.Blazor.Services.Base;
 using _2bAdvice.Students.Blazor.Store;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace _2bAdvice.Students.Blazor.Pages.Students;
 

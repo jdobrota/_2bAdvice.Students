@@ -72,6 +72,14 @@ public record StudentsState
     /// The student to remove.
     /// </value>
     public StudentDto? StudentToRemove { get; init; }
+
+    /// <summary>
+    /// Gets the students query parameters.
+    /// </summary>
+    /// <value>
+    /// The students query parameters.
+    /// </value>
+    public string? StudentsQueryParameters { get; init; }
 }
 
 [FeatureState]
@@ -110,16 +118,11 @@ public class StudentsFeatureState : Feature<StudentsState>
             Students = new(),
             IsError = false,
             IsLoading = false,
-            StudentToAddOrEdit = new()
-            {
-                DateOfBirth = DateTime.Now,
-                FirstName = string.Empty,
-                LastName = string.Empty,
-                TypeOfStudy = StudyTypeEnum.INTERNAL
-            },
+            StudentToAddOrEdit = new UpdateStudentDto(),
             IsSubmitting = false,
             IsEditMode = false,
-            StudentToRemove = new(),
+            StudentToRemove = new StudentDto(),
+            StudentsQueryParameters = string.Empty,
         };
     }
 }

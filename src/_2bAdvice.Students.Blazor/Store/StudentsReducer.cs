@@ -127,13 +127,7 @@ public static class StudentsReducer
         {
             StudentToAddOrEdit = state.IsEditMode
                 ? state.StudentToAddOrEdit
-                : new()
-                {
-                    DateOfBirth = DateTime.Now,
-                    FirstName = string.Empty,
-                    LastName = string.Empty,
-                    TypeOfStudy = StudyTypeEnum.INTERNAL
-                },
+                : new UpdateStudentDto(),
             IsSubmitting = false,
         };
     }
