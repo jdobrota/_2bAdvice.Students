@@ -4,42 +4,42 @@
     <DataAnnotationsValidator />
     <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
     <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addStudentModalLabel">@(IsEditMode ? "Edit student" : "Add student")</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h1 class="modal-title fs-5" id="addStudentModalLabel">@(IsEditMode ? L!["EditStudent"] : L!["AddStudent"])</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label=@L!["Close"]></button>
     </div>
     <div class="modal-body">
         <div class="form-group mt-2">
-            <label for="firstName">First Name</label>
-            <InputText class="form-control" @bind-Value="Student!.FirstName" placeholder="Student's first name" disabled="@IsSubmitting" required/>
+            <label for="firstName">@L!["FirstName"]</label>
+            <InputText class="form-control" @bind-Value="Student!.FirstName" placeholder=@L!["FirstNamePlaceholder"] disabled="@IsSubmitting" required />
             <ValidationMessage For="@(() => Student!.FirstName)" />
         </div>
         <div class="form-group mt-2">
-            <label for="lastName">Last Name</label>
-            <InputText class="form-control" @bind-Value="Student!.LastName" placeholder="Student's last name" disabled="@IsSubmitting" required />
+            <label for="lastName">@L!["LastName"]</label>
+            <InputText class="form-control" @bind-Value="Student!.LastName" placeholder=@L!["LastNamePlaceholder"] disabled="@IsSubmitting" required />
             <ValidationMessage For="@(() => Student!.LastName)" />
         </div>
         <div class="form-group mt-2">
-            <label for="dateOfBirth">Date of Birth</label>
+            <label for="dateOfBirth">@L!["DateOfBirth"]</label>
             <InputDate class="form-control" @bind-Value="Student!.DateOfBirth" disabled="@IsSubmitting"  required />
         </div>
         <div class="form-group mt-2">
-            <label for="typeOfStudy">Type of study</label>
+            <label for="typeOfStudy">@L!["TypeOfStudy"]</label>
             <InputSelect class="form-control" @bind-Value="Student!.TypeOfStudy" disabled="@IsSubmitting" required>
                 @if(!IsEditMode){
-                    <option value="selectType" selected disabled>-- Select Type of study --</option>
+                    <option value="selectType" selected disabled>@L!["TypeOfStudyPlaceholder"]</option>
                 }
                 @foreach (var type in Enum.GetValues(typeof(StudyTypeEnum)))
                 {
-                    <option value=@type selected="@((StudyTypeEnum) type == Student.TypeOfStudy)">@type</option>
+                    <option value=@type selected="@((StudyTypeEnum) type == Student.TypeOfStudy)">@L!["Enum:StudyType." + (int)type]</option>
                 }
             </InputSelect>
         </div>
         <div class="form-group mt-2">
-            <label for="School">School</label>
+            <label for="School">@L["School"]</label>
             <InputSelect class="form-control" @bind-Value="Student!.SchoolId" disabled="@IsSubmitting" required>
                 @if (!IsEditMode)
                 {
-                    <option value="selectSchool" selected disabled>-- Select School --</option>
+                    <option value="selectSchool" selected disabled>@L!["SchoolPlaceholder"]</option>
                 }
                 @foreach (var school in Schools)
                 {
@@ -50,22 +50,22 @@
     </div>
     <div class="modal-footer pt-2">
         <button type="button" data-bs-dismiss="modal" class="btn btn-secondary" disabled="@IsSubmitting">
-            <span class="oi oi-media-skip-backward" aria-hidden="true"></span> Back To List
+            <span class="oi oi-media-skip-backward" aria-hidden="true"></span> @L!["BackToList"]
         </button>
         <button type="submit" data-bs-dismiss="modal" class="btn @(IsEditMode ? "btn-warning" : "btn-success")" disabled="@IsSubmitting">
             <span class="bi @(IsEditMode ? "bi-pencil" : "bi-plus-square")" aria-hidden="true" />
-            @(IsEditMode ? "Edit and Close" : "Add and Close")
+            @(IsEditMode ? L!["EditAndClose"] : L!["AddAndClose"])
         </button>
         <button class="btn @(IsEditMode ? "btn-warning" : "btn-success")" type="submit" disabled="@IsSubmitting">
             @if (IsSubmitting)
             {
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                <span role="status">Loading...</span>
+                <span role="status">@L!["Loading"]</span>
             }
             else
             {
                 <span class="bi @(IsEditMode ? "bi-pencil" : "bi-plus-square")" aria-hidden="true" />
-                <span role="status">@(IsEditMode ? "Edit" : "Add")</span>
+                <span role="status">@(IsEditMode ? L!["Edit"] : L!["Add"])</span>
             }
         </button>
     </div>

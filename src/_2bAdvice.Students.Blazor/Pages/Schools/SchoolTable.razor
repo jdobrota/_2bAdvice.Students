@@ -3,14 +3,14 @@
 
 <SchoolModal />
 
-<button type="button" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#SchoolModal" @onclick="() => this.AddSchool()"><span class="bi bi-plus-square" aria-hidden="true"></span>   Add School</button>
+<button type="button" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#SchoolModal" @onclick="() => this.AddSchool()"><span class="bi bi-plus-square" aria-hidden="true"></span>   @L!["AddSchool"]</button>
 <table class="table align-middle table-responsive text-center">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Type Of School</th>
-            <th>Actions</th>
+            <th>@L!["Name"]</th>
+            <th>@L!["Address"]</th>
+            <th>@L!["TypeOfSchool"]</th>
+            <th>@L!["Actions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -21,12 +21,12 @@
                 <tr>
                     <td>@school.Name</td>
                     <td>@school.Address</td>
-                    <td>@school.TypeOfSchool</td>
+                    <td>@L!["Enum:SchoolType." + (int) school.TypeOfSchool]</td>
                     <td>
-                        <button type="button" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#SchoolModal" @onclick="() => this.SetSchoolForEdit(school)" title="Modify School">
+                        <button type="button" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#SchoolModal" @onclick="() => this.SetSchoolForEdit(school)" title=@L!["ModifySchool"]>
                             <span class="bi bi-pencil" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn btn-danger mx-1" @onclick="() => this.DeleteSchool(school)" title="Delete School">
+                        <button type="button" class="btn btn-danger mx-1" @onclick="() => this.DeleteSchool(school)" title=@L!["DeleteSchool"]>
                             <span class="bi bi-trash" aria-hidden="true"></span>
                         </button>
                     </td>
@@ -38,7 +38,7 @@
             <tr>
                 <td colspan="5">
                     <div class="alert alert-info">
-                        <p>... No data ...</p>
+                        <p>@L!["NoData"]</p>
                     </div>
                 </td>
             </tr>
@@ -48,7 +48,7 @@
             <tr>
                 <td colspan="5">
                     <div class="spinner-border text-success" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="sr-only">@L!["Loading"]</span>
                     </div>
                 </td>
             </tr>
@@ -58,7 +58,7 @@
             <tr>
                 <td colspan="5">
                     <div class="alert alert-warning">
-                        <p>An error occured while fetching data</p>
+                        <p>@L!["Error"]</p>
                     </div>
                 </td>
             </tr>

@@ -3,15 +3,15 @@
 
 <StudentModal />
 
-<button type="button" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.AddStudent()"><span class="bi bi-plus-square" aria-hidden="true"></span>   Add Student</button>
+<button type="button" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.AddStudent()"><span class="bi bi-plus-square" aria-hidden="true"></span>   @L!["AddStudent"]</button>
 <table class="table align-middle table-responsive text-center">
     <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Type Of Study</th>
-            <th>Date Of Birth</th>
-            <th>Actions</th>
+            <th>@L!["FirstName"]</th>
+            <th>@L!["LastName"]</th>
+            <th>@L!["TypeOfStudy"]</th>
+            <th>@L!["DateOfBirth"]</th>
+            <th>@L!["Actions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -22,19 +22,19 @@
                 <tr>
                     <td>@student.FirstName</td>
                     <td>@student.LastName</td>
-                    <td>@student.TypeOfStudy</td>
+                    <td>@L!["Enum:StudyType." + (int) student.TypeOfStudy]</td>
                     <td>@student.DateOfBirth.ToString("dd. MM. yyyy")</td>
                     <td>
                         @if (!student.SchoolId.Equals(null) || !student.SchoolId.Equals(Guid.Empty))
                         {
-                            <button type="button" class="btn btn-success mx-1" data-bs-toggle="collapse" data-bs-target="#schoolTable_@student.Id" aria-expanded="false" aria-controls="schoolTable_@student.Id" title="Show School">
+                            <button type="button" class="btn btn-success mx-1" data-bs-toggle="collapse" data-bs-target="#schoolTable_@student.Id" aria-expanded="false" aria-controls="schoolTable_@student.Id" title=@L!["ShowSchool"]>
                                 <span class="bi bi-arrow-bar-down" aria-hidden="true"></span>
                             </button>
                         }
-                        <button type="button" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.SetStudentForEdit(student)" title="Modify Student">
+                        <button type="button" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#StudentModal" @onclick="() => this.SetStudentForEdit(student)" title=@L!["ModifyStudent"]>
                             <span class="bi bi-pencil" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn btn-danger mx-1" @onclick="() => this.DeleteStudent(student)" title="Delete Student">
+                        <button type="button" class="btn btn-danger mx-1" @onclick="() => this.DeleteStudent(student)" title=@L!["DeleteStudent"]>
                             <span class="bi bi-trash" aria-hidden="true"></span>
                         </button>
                     </td>
@@ -50,7 +50,7 @@
             <tr>
                 <td colspan="5">
                     <div class="alert alert-info">
-                        <p>... No data ...</p>
+                        <p>@L!["NoData"]</p>
                     </div>
                 </td>
             </tr>
@@ -60,7 +60,7 @@
             <tr>
                 <td colspan="5">
                     <div class="spinner-border text-success" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="sr-only">@L!["Loading"]</span>
                     </div>
                 </td>
             </tr>
@@ -70,7 +70,7 @@
             <tr>
                 <td colspan="5">
                     <div class="alert alert-warning">
-                        <p>An error occured while fetching data</p>
+                        <p>@L!["Error"]</p>
                     </div>
                 </td>
             </tr>

@@ -1,7 +1,9 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using _2bAdvice.Students.Blazor.Services.Base;
 using _2bAdvice.Students.Blazor.Store.Schools;
+using _2bAdvice.Students.Localization;
 
 namespace _2bAdvice.Students.Blazor.Pages.Schools;
 
@@ -48,6 +50,9 @@ public partial class SchoolForm
     ///   <c>true</c> if this instance is edit mode; otherwise, <c>false</c>.
     /// </value>
     private bool IsEditMode => this.SchoolsState!.Value.IsEditMode!;
+
+    [Inject]
+    IStringLocalizer<StudentsResource>? L { get; set; }
 
     /// <summary>
     /// Handles the submit form.

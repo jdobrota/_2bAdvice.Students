@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Volo.Abp.ObjectMapping;
 using _2bAdvice.Students.Blazor.Services.Base;
 using _2bAdvice.Students.Blazor.Store.Schools;
 using _2bAdvice.Students.Blazor.Store.Students;
+using _2bAdvice.Students.Localization;
 
 namespace _2bAdvice.Students.Blazor.Pages.Schools;
 
@@ -54,4 +56,13 @@ public partial class SchoolTableForStudent
     /// </value>
     [Parameter]
     public Guid? StudentId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the l.
+    /// </summary>
+    /// <value>
+    /// The l.
+    /// </value>
+    [Inject]
+    IStringLocalizer<StudentsResource>? L { get; set; }
 }

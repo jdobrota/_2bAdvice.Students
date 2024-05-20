@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Volo.Abp.ObjectMapping;
 using _2bAdvice.Students.Blazor.Services.Base;
 using _2bAdvice.Students.Blazor.Store.Schools;
+using _2bAdvice.Students.Localization;
 
 namespace _2bAdvice.Students.Blazor.Pages.Schools;
 
@@ -61,6 +63,9 @@ public partial class SchoolTable
     ///   <c>true</c> if this instance is error; otherwise, <c>false</c>.
     /// </value>
     private bool IsError => this.SchoolsState!.Value.IsError;
+
+    [Inject]
+    IStringLocalizer<StudentsResource>? L { get; set; }
 
     /// <summary>
     /// Method invoked when the component is ready to start, having received its
